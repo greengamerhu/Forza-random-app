@@ -9,82 +9,13 @@ import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler
 import { Link, Tabs } from 'expo-router';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator, NativeStackScreenProps} from '@react-navigation/native-stack';
+import { RootStackParamList } from '../StackParamList';
+import { CarScreen } from './carScreenTab';
 
-export type RootStackParamList = {
-  mainPage: undefined
-  carsScreen : {carTypeList : CarDetails[]}
-  
-};
+
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
-type carScreenProps = NativeStackScreenProps<RootStackParamList, 'carsScreen'> 
-export const CarScreen : React.FC<carScreenProps> = (props) => {
-  function checkPerformanceColor(performanceClass : string) {
-    if (performanceClass == 'D') {
-      return '#42bdf4'
-    }
-    if (performanceClass == 'C') {
-      return '#ffc533'
-    }
-    if (performanceClass == 'B') {
-      return '#ff632c'
-    }
-    if (performanceClass == 'A') {
-      return '#f43156'
-    }
-    if (performanceClass == 'S1') {
-      return '#b960e8'
-    }
-    if (performanceClass == 'S2') {
-      return '#165edb'
-    }
-    if (performanceClass == 'X') {
-      return '#19d858'
-    }
-  }
-  return ( <View style={styles.container}>
-          { <ScrollView >
-      {
-        
-        props.route.params.carTypeList.map(item => (
-          <React.Fragment key={item.Id}>
 
-          <ListItem  key={item.Id}  containerStyle = {{backgroundColor : 'transparent'}} >
-            <ListItem.Content >
-                <View  style={{flexDirection : 'row', flex :1}}>
-
-                    <View style={{flex:5}}>
-                      <Text style = {{fontSize : 18}} >{item.Name}</Text>
-                    </View>
-                    <View style={{flex:2}}>
-                      <View style={[styles.horizontalContainer, { borderColor : checkPerformanceColor(item.PI), }]} >
-                        <View  style={{flex : 1, backgroundColor : checkPerformanceColor(item.PI), paddingHorizontal: 8,paddingVertical: 5.,alignItems: 'center',justifyContent: 'center',minWidth: 27}}>
-                           <Text >{item.PI}</Text> 
-                        </View>
-                        <View  style = {{flex:5, backgroundColor :'white', paddingHorizontal: 8,paddingVertical: 4,alignItems: 'center',justifyContent: 'center',} }>
-                           <Text style = {styles.indicatorText}>{item.PI__1}</Text>
-                        </View>
-                      </View>
-                    {/* <Text  style={{backgroundColor : checkPerformanceColor(item.PI), textAlign : 'center', fontSize : '25px'}}>{item.PI}</Text> */}
-                     {/* <Text style={{backgroundColor : 'white', color: 'black', fontWeight : 'bold', textAlign : 'center', fontSize : '20px'}}>{item.PI__1}</Text> */}
-                    </View>
-                   
-                   
-                </View>
-            </ListItem.Content>
-          </ListItem>
-  
-        </React.Fragment>
-        ))
-      }
-      </ScrollView> }
-   
-    
-    
-    <Button title={"Vissza"} onPress={() => props.navigation.goBack()}></Button>
-  </View>
-  )
-}
 type mainPageScreenProps = NativeStackScreenProps<RootStackParamList, 'mainPage', 'carsScreen'> 
 export const MainPage:  React.FC<mainPageScreenProps> = (props) => {
   const [carList, setCarList] = useState<CarDetails[]>([]) 
@@ -131,11 +62,7 @@ useEffect(() => {
   const getRandomElement = (arr: any[]) =>
   arr[Math.floor(Math.random() * arr.length)]
   return ( 
-  
       <View style={styles.container}>
-
-   
-
       <View style={styles.container}>
         <Text style = {{fontSize : 40, alignSelf : 'center', padding : 10}}>{randomType}</Text>
         {randomType == "" ? '' : <Pressable  onPress={() => { props.navigation.push('carsScreen', { carTypeList : randomTypeList}) }} style = {styles.button} >
@@ -146,7 +73,6 @@ useEffect(() => {
           <Text style = {{fontSize : 15, alignSelf : 'center'}}>{randomAvgPerft}</Text>
           <Text style = {{fontSize : 15, alignSelf : 'center'}}>{ randomMaxPerft}</Text>
         </View>
-
       </View>
     <View style={{flex : 2}}>
 
@@ -164,22 +90,14 @@ export default function TabOneScreen({}) {
     <GestureHandlerRootView style={{flex : 1}}>
       <Stack.Navigator screenOptions={{headerShown : true, }}>
         <Stack.Screen name = 'mainPage' options={{title : "Randomizer", headerTitleAlign : 'center'}} component={MainPage} />
-        <Stack.Screen name = "carsScreen"options={{title : "Car list"}} component={CarScreen} />
+        <Stack.Screen name = "carsScreen"options={{title : "Car list", headerTitleAlign : 'center'}} component={CarScreen} />
       </Stack.Navigator>
       </GestureHandlerRootView>
   )
- 
-  const [carList, setCarList] = useState<CarDetails[]>([]) 
-  const [randomType, setrandomType] = useState('')
-  const [randomAvgPerft, setrandomAvgPref] = useState('')
-  const [randomMaxPerft, setrandomMaxPref] = useState('')
-  const [randomMinPerft, setrandomMinPref] = useState('')
-
-
 }
 
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
     horizontalContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -195,11 +113,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     minWidth: 40,
     borderWidth: 1,
-    borderColor: '#FFF', // White border for contrast
-    marginRight: 5, // Space between the indicator and number box
+    borderColor: '#FFF',
+    marginRight: 5, 
   },
   indicatorText: {
-    color: 'black', // White text color for contrast
+    color: 'black', 
     fontWeight: 'bold',
     fontSize: 16,
   },
@@ -233,15 +151,15 @@ const styles = StyleSheet.create({
     width : 130,
     alignSelf : 'center',
     alignItems : 'center',
-    borderColor: 'white', // Border color
-    borderWidth: 2, // Border width
-    backgroundColor: 'transparent', // Transparent background
+    borderColor: 'white',
+    borderWidth: 2, 
+    backgroundColor: 'transparent',
     padding : 15,
-    borderRadius: 5, // Rounded corners
+    borderRadius: 5, 
   },
   buttonTitle: {
-    color: 'white', // Text color
-    fontWeight: 'bold', // Bold text
+    color: 'white', 
+    fontWeight: 'bold',
     fontSize : 18
   },
   separator: {
